@@ -5,42 +5,28 @@ def part1():
     data = []
     with open("3-input.txt", "r") as f:
         lines = f.readlines()
-        for line_num, line in enumerate(lines[:35]):
+        for line_num, line in enumerate(lines):
             temp = []
             line = line.strip()
             line_length = len(line)
-            nums = re.findall(r"\d+", line)
-            num_index = 0
+            nums = re.finditer(r"\d+", line)
             for num in nums:
-                i = line.index(num, num_index)
-                num_index = i
+                i = num.start()
                 si = i - 1
-                ei = i + len(num)
-                if i == 0:
-                    si = i
-                if i + len(num) == line_length:
-                    ei = line_length - 1
-                print("{}  -  I: {}, SI: {}, EI: {}".format(num, i, si, ei))
-                if re.match(r"[^\d\.]", line[si]):
-                    print("start")
-                    temp.append(int(num))
-                elif re.match(r"[^\d\.]", line[ei]):
-                    temp.append(int(num))
-                    print("end")
-                else:
-                    print("else")
-                    if line_num < (len(lines)-1):
-                        print(lines[line_num+1][si:ei+1])
-                    if line_num > 0:
-                        print(lines[line_num-1][si:ei+1])
-                    if line_num == 0 and len(re.findall(r"[^\d\.]", lines[line_num+1][si:ei+1])) > 0:
-                        temp.append(int(num))
-                    elif line_num == line_length - 1 and len(re.findall(r"[^\d\.]", lines[line_num-1][si:ei+1])) > 0:
-                        temp.append(int(num))
-                    elif len(re.findall(r"[^\d\.]", lines[line_num-1][si:ei+1])) > 0 or len(re.findall(r"[^\d\.]", lines[line_num+1][si:ei+1])) > 0:
-                        temp.append(int(num))
-                        # print("start to end top")
-                        # print("start to end bottom")
+                ei = num.end()
+                # if i == 0:
+                #     si = i
+                # if i + len(num) == line_length:
+                #     ei = line_length - 1
+                print("{}  -  I: {}, SI: {}, EI: {}".format(num.group(0), i, si, ei))
+                part_num = False
+                for x in range(si, ei+1):
+                    for y in range(line_num-1, line_num+2):
+                        if (y >= 0 and y < len(lines)) and (x >= 0 and x < line_length):
+                            if re.match(r"[^\d\.]", lines[y][x]):
+                                part_num = True
+                if part_num:
+                    temp.append(int(num.group()))
             print(temp)
             data.append(sum(temp))
     print(data)
