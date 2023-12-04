@@ -1,6 +1,4 @@
 import re
-import math
-from typing import Dict, List
 
 
 def part1():
@@ -22,7 +20,6 @@ def part1():
     print("Part 1: {}".format(sum(data)))
 
 
-
 def part2():
     with open("4-input.txt", "r") as f:
         lines = f.readlines()
@@ -33,11 +30,10 @@ def part2():
         winning = re.findall(r"\d+", winning_str)
         choices = re.findall(r"\d+", choices_str)
         temp = [x for x in choices if x in winning]
-        if len(temp) > 0:
-            data[card] += 1
-            print(data[card])
-            for c in range(1, len(temp)+1, 1):
-                data[card + c] += 1 * data[card]
+        data[card] += 1
+        print(data[card])
+        for c in range(1, len(temp)+1, 1):
+            data[card + c] += 1 * data[card]
     print("Part 2: {}".format(sum(data)))
 
 
