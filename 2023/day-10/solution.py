@@ -1,4 +1,6 @@
 import pprint
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 GRID = []
 
@@ -9,6 +11,7 @@ class Coordinate:
         self.y = y
         self.value = GRID[y][x]
         self.start = self.value == "S"
+        self.tuple = (x, y)
 
     def __repr__(self):
         return f"Coordinate({self.__str__()})"
@@ -85,17 +88,10 @@ def followpath(current: Coordinate, previous: Coordinate) -> (Coordinate, bool):
     return nc, run
 
 
-def part1():
-    with open("input.txt", "r") as f:
-        lines = f.readlines()
+def part1(start: Coordinate):
     dist = []
-    for y, line in enumerate(lines):
-        line = line.strip()
-        GRID.append(line)
-        dist.append([0] * len(line))
-        if "S" in line:
-            x = line.index("S")
-            start = Coordinate(x, y)
+    for _, row in enumerate(GRID):
+        dist.append([0] * len(row))
     # print(GRID)
     print(f"Start: {start}")
     if start.check_north():
@@ -169,32 +165,84 @@ def part1():
     print("Part 1: {}".format(max_dist))
 
 
-def part2():
-    with open("input.txt", "r") as f:
-        lines = f.readlines()
-    sums = 0
-    # for i, line in enumerate(lines):
-    #     rows = []
-    #     nums = [int(n) for n in line.strip().split(" ") if n != ""]
-    #     rows.append(nums)
-    #     while not all([int(n) == 0 for n in nums]):
-    #         # print(nums)
-    #         temp = [0] * (len(nums) - 1)
-    #         for j in range(1, len(nums)):
-    #             temp[j - 1] = nums[j] - nums[j - 1]
-    #         rows.append(temp)
-    #         nums = temp
-    #     rows.reverse()
-    #     for i, row in enumerate(rows):
-    #         if i == 0:
-    #             rows[i].insert(0, 0)
-    #         else:
-    #             temp = rows[i][0] - rows[i - 1][0]
-    #             rows[i].insert(0, temp)
-    #     # print(rows)
-    #     sums += rows[-1][0]
-    print("Part 2: {}".format(sums))
+def part2(start: Coordinate):
+    points = []
+    # print(GRID)
+    print(f"Start: {start}")
+    if start.check_north():
+        previous = start
+        current = Coordinate(start.x, start.y - 1)
+        run = True
+        while run:
+            # print(current)
+            nc, run = followpath(current, previous)
+            previous = current
+            if nc is not None:
+                current = nc
+    elif start.check_south():
+        if start.tuple not in points:
+            points.append(start.tuple)
+        previous = start
+        current = Coordinate(start.x, start.y + 1)
+        run = True
+        while run:
+            if current.tuple not in points:
+                points.append(current.tuple)
+            # print(current)
+            nc, run = followpath(current, previous)
+            previous = current
+            if nc is not None:
+                current = nc
+    elif start.check_east():
+        previous = start
+        current = Coordinate(start.x + 1, start.y)
+        run = True
+        while run:
+            # print(current)
+            nc, run = followpath(current, previous)
+            previous = current
+            if nc is not None:
+                current = nc
+    elif start.check_west():
+        previous = start
+        current = Coordinate(start.x - 1, start.y)
+        run = True
+        while run:
+            # print(current)
+            nc, run = followpath(current, previous)
+            previous = current
+            if nc is not None:
+                current = nc
+    enclosed = 0
+    poly = Polygon(list(points))
+    # print(points)
+    # print(poly)
+    # new_grid = []
+    # for _, row in enumerate(GRID):
+    #     new_grid.append(["x"] * len(row))
+    # for (x, y) in list(points):
+    #     new_grid[y][x] = "."
+    # for row in new_grid:
+    #     print(''.join(*zip(*row)))
+
+    for y, row in enumerate(GRID):
+        for x, _ in enumerate(row):
+            point = Point(x, y)
+            if (x, y) not in points and x > 0 and x < len(row) -1 and y > 0 and y < len(GRID) - 1:
+                if poly.contains(point):
+                    enclosed += 1
+
+    print("Part 2: {}".format(enclosed))
 
 
-part1()
-part2()
+with open("input.txt", "r") as f:
+    lines = f.readlines()
+for y, line in enumerate(lines):
+    line = line.strip()
+    GRID.append(line)
+    if "S" in line:
+        x = line.index("S")
+        start = Coordinate(x, y)
+
+part1(start)
+part2(start)
