@@ -51,7 +51,7 @@ def part2():
                 rows[i].insert(0, temp)
         # print(rows)
         sums += rows[-1][0]
-    print("Part 1: {}".format(sums))
+    print("Part 2: {}".format(sums))
 
 
 part1()
