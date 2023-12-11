@@ -80,8 +80,8 @@ def part2():
             min_y = min([p1[1], p2[1]])
             er = [y for y in range(min_y, max_y) if x in empy_rows]
             print(f"ER: {er}")
-            x_diff = abs(p1[0] - p2[0]) + len(ec) * 10
-            y_diff = abs(p1[1] - p2[1]) + len(er) * 10
+            x_diff = (max_x - min_x) + (len(ec) * 10) - (1 if len(ec) > 0 else 0)
+            y_diff = (max_y - min_y) + (len(er) * 10) - (1 if len(er) > 0 else 0)
             d = x_diff + y_diff
             # print(f"Point 1: {p1}, Point 2: {p2}, Distance: {d}")
             dist += d
