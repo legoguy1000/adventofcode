@@ -42,22 +42,21 @@ def part1():
 
 
 def part2():
-    expanded_grid = []
     galaxies = []
     empy_rows = set()
     empy_cols = set()
     for y, line in enumerate(GRID):
         # expanded_grid.append(line)
         if "#" not in line:
-            print(f"Row empty: {y}")
+            # print(f"Row empty: {y}")
             empy_rows.add(y)
             # expanded_grid.extend([line] * 1000000)
     for x in range(0, len(GRID[0])):
         if all([line[x] == "." for line in GRID]):
-            print(f"COL empty: {x}")
+            # print(f"COL empty: {x}")
             empy_cols.add(x)
-    print(f"Empty Rows: {empy_rows}")
-    print(f"Empty Cols: {empy_cols}")
+    # print(f"Empty Rows: {empy_rows}")
+    # print(f"Empty Cols: {empy_cols}")
     # pringrid(EXPANDED_GRID)
 
     for y, line in enumerate(GRID):
@@ -71,37 +70,30 @@ def part2():
         for j in range(i + 1, len(galaxies)):
             p1 = galaxies[i]
             p2 = galaxies[j]
-            print(f"Point 1: {p1}, Point 2: {p2}")
+            # print(f"Point 1: {p1}, Point 2: {p2}")
             max_x = max([p1[0], p2[0]])
             min_x = min([p1[0], p2[0]])
             ec = [x for x in range(min_x, max_x) if x in empy_cols]
-            print(f"EC: {ec}")
             max_y = max([p1[1], p2[1]])
             min_y = min([p1[1], p2[1]])
-            er = [y for y in range(min_y, max_y) if x in empy_rows]
-            print(f"ER: {er}")
-            x_diff = (max_x - min_x) + (len(ec) * 10) - (1 if len(ec) > 0 else 0)
-            y_diff = (max_y - min_y) + (len(er) * 10) - (1 if len(er) > 0 else 0)
+            er = [y for y in range(min_y, max_y) if y in empy_rows]
+            x_diff = (max_x - min_x) + (len(ec) * 1000000) - len(ec)
+            y_diff = (max_y - min_y) + (len(er) * 1000000) - len(er)
             d = x_diff + y_diff
             # print(f"Point 1: {p1}, Point 2: {p2}, Distance: {d}")
+            # print(f"EC: {ec}")
+            # print(f"ER: {er}")
             dist += d
-            # break
-        # break
 
     print("Part 2: {}".format(dist))
 
 
-with open("sample1.txt", "r") as f:
+with open("input.txt", "r") as f:
     lines = f.readlines()
 galaxies = []
 for y, line in enumerate(lines):
     line = line.strip()
     GRID.append(line)
-
-# pringrid(GRID)
-# print()
-# print()
-
 
 part1()
 part2()
