@@ -16,7 +16,7 @@ def part1():
     for y, line in enumerate(GRID):
         a, b = line.split(" ")
         b = [int(i) for i in b.split(',')]
-        print(f"{y} {a}")
+        # print(f"{y} {a}")
         m = list(re.finditer(r"\?", a))
         # print(m)
         for p in range(1, len(m) + 1):
@@ -47,6 +47,7 @@ def part2():
     DP = {}
     def f(dots, blocks, i, bi, current):
         key = (i, bi, current)
+        # print(key)
         if key in DP:
             return DP[key]
         if i==len(dots):
@@ -75,6 +76,7 @@ def part2():
         print(f"{y} {a} {b}")
         DP.clear()
         sum_opts += f(a, b, 0, 0, 0)
+        # break
     print("Part 2: {}".format(sum_opts))
 
 
@@ -85,5 +87,5 @@ for y, line in enumerate(lines):
     GRID.append(line)
 
 # pringrid(GRID)
-# part1()
+part1()
 part2()
