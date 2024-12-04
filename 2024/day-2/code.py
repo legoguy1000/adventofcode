@@ -1,4 +1,18 @@
+import copy
 import os
+
+
+def checksafe(values: list[int]) -> bool:
+    diffs = []
+    for i in range(1, len(values)):
+        diffs.append(values[i] - values[i - 1])
+    if diffs.count(0) > 0:
+        return False
+    elif (all([x > 0 for x in diffs]) or all([x < 0 for x in diffs])) and all(
+        [abs(x) <= 3 for x in diffs]
+    ):
+        return True
+    return False
 
 
 def part1():
@@ -9,34 +23,7 @@ def part1():
             if line == "":
                 continue
             values = list(map(int, line.split()))
-            increasing = False
-            decreasing = False
-            safe = False
-            if values[1] - values[0] > 0 and abs(values[0] - values[1]) <= 3:
-                increasing = True
-            elif values[1] - values[0] < 0 and abs(values[0] - values[1]) <= 3:
-                decreasing = True
-            else:
-                continue
-            for i in range(2, len(values)):
-                if (
-                    increasing
-                    and values[i] - values[i - 1] > 0
-                    and abs(values[i] - values[i - 1]) <= 3
-                    and abs(values[i] - values[i - 1]) > 0
-                ):
-                    safe = True
-                elif (
-                    decreasing
-                    and values[i] - values[i - 1] < 0
-                    and abs(values[i] - values[i - 1]) <= 3
-                    and abs(values[i] - values[i - 1]) > 0
-                ):
-                    safe = True
-                else:
-                    safe = False
-                    break
-            if safe:
+            if checksafe(values=values):
                 safe_count += 1
     print(f"Part1: The Sum is {safe_count}")
 
@@ -48,45 +35,18 @@ def part2():
         for line in f.readlines():
             if line == "":
                 continue
-            print(line)
+            # print(line)
             values = list(map(int, line.split()))
-            increasing = False
-            decreasing = False
-            safe = False
-            unsafe_indicators = 0
-            if values[1] - values[0] > 0 and abs(values[0] - values[1]) <= 3:
-                increasing = True
-            elif values[1] - values[0] < 0 and abs(values[0] - values[1]) <= 3:
-                decreasing = True
-            else:
-                unsafe_indicators += 1
-            for i in range(2, len(values)):
-                # print(f"{values[i]} {values[i - 1]}")
-                if (
-                    increasing
-                    and values[i] - values[i - 1] > 0
-                    and abs(values[i] - values[i - 1]) <= 3
-                    and abs(values[i] - values[i - 1]) > 0
-                ):
-                    safe = True
-                    # print("1")
-                elif (
-                    decreasing
-                    and values[i] - values[i - 1] < 0
-                    and abs(values[i] - values[i - 1]) <= 3
-                    and abs(values[i] - values[i - 1]) > 0
-                ):
-                    safe = True
-                    # print("2")
-                else:
-                    unsafe_indicators += 1
-                    # print("3")
-                if unsafe_indicators > 1:
-                    safe = False
-                    break
-            print(safe)
-            if safe:
+            if checksafe(values=values):
                 safe_count += 1
+            else:
+                for i in range(0, len(values)):
+                    vals = copy.deepcopy(values)
+                    vals.pop(i)
+                    # print(vals)
+                    if checksafe(values=vals):
+                        safe_count += 1
+                        break
     print(f"Part 2: The Sum is {safe_count}")
 
 
