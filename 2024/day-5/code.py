@@ -56,17 +56,20 @@ def part2():
                 badupdates.append(update)
                 break
     for update in badupdates:
-        for rule in rules:
-            if not all([x in update for x in rule]):
-                continue
-            if update.index(rule[0]) > update.index(rule[1]):
-                update.insert(update.index(rule[0]), update.pop(update.index(rule[1])))
+        # print(update)
+        for i in range(len(update)):
+            for rule in rules:
+                if not all([x in update for x in rule]):
+                    continue
+                if update.index(rule[0]) > update.index(rule[1]):
+                    update.insert(
+                        update.index(rule[0]), update.pop(update.index(rule[1]))
+                    )
         middle = int(len(update) / 2)
         sum += int(update[middle])
-        # print(update)
     print(f"Part 2: The Sum is {sum}")
 
 
 if __name__ == "__main__":
-    # part1()
+    part1()
     part2()
