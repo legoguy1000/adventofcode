@@ -5,8 +5,11 @@ from operator import mul
 def sumnum(x,y) -> int:
     return x + y
 
-def check_equation(data: dict) -> bool:
-    permutations = list(itertools.product([sumnum, mul], repeat=len(data["vals"])-1))
+def concat(x,y) -> int:
+    return int(str(x)+str(y))
+
+def check_equation(data: dict, funcs: list) -> bool:
+    permutations = list(itertools.product(funcs, repeat=len(data["vals"])-1))
     for perm in permutations:
         total = data["vals"][0]
         i = 1
@@ -27,7 +30,7 @@ def part1():
             if check_equation({
                 "total": int(total),
                 "vals": list(map(int, vals.strip().split(" ")))
-            }):
+            }, [sumnum, mul]):
                 sum += int(total)
             
 
@@ -37,12 +40,14 @@ def part1():
 def part2():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     sum = 0
-    rules = []
-    updates = []
-    badupdates = []
     with open(dir_path + "/input.txt", encoding="utf-8") as f:
         for line in f.readlines():
-            pass
+            total, vals = line.split(":")
+            if check_equation({
+                "total": int(total),
+                "vals": list(map(int, vals.strip().split(" ")))
+            }, [sumnum, mul, concat]):
+                sum += int(total)
     print(f"Part 2: The Sum is {sum}")
 
 
